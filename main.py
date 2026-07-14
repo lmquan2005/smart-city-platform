@@ -26,14 +26,16 @@ def main():
             logging.error(f"Không thể lấy dữ liệu thời tiết cho thành phố: {city['city']}. Bỏ qua.")
             continue
 
-        df = transform_weather(weather, city['city'])
+        records = transform_weather(weather, city['city'])
+        df = pd.DataFrame([records]) if records else pd.DataFrame()
         if df is None or df.empty:
             logging.error(f"Không thể chuyển đổi dữ liệu thời tiết cho thành phố: {city['city']}. Bỏ qua.")
             continue
 
         save_csv(df)
 
-        insert_weather(df)
+        for _, row in df.iterrows():
+            insert_weather(row.to_dict())
         logging.info(f"Hoàn tất xử lý dữ liệu thời tiết cho thành phố: {city['city']}")
 
 if __name__ == "__main__":
