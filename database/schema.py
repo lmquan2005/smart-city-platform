@@ -1,36 +1,33 @@
 from database.connection import get_connection
+from database.queries import CREATE_CITY_TABLE, CREATE_WEATHER_TABLE
+from config.logger import logging
 
 def create_city_table():
-    conn = get_connection()
-    cursor = conn.cursor()
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
 
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS city (
-        id SERIAL PRIMARY KEY,
-        city VARCHAR(100) UNIQUE NOT NULL,
-        latitude DOUBLE PRECISION NOT NULL,
-        longitude DOUBLE PRECISION NOT NULL
-    )
-    ''')
-
-    conn.commit()
-    conn.close()
-    
+        cursor.execute(CREATE_CITY_TABLE)
+        conn.commit()
+        logging.info("City table created successfully.")
+    except Exception as e:
+        logging.error(f"Error creating city table: {e}")
+    finally:
+        if conn:    
+            conn.close()
+            
 def create_weather_table():
-    conn = get_connection()
-    cursor = conn.cursor()
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
 
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS weather (
-        id SERIAL PRIMARY KEY,
-        city_id INTEGER REFERENCES city(id),
-        observation_time TIMESTAMP NOT NULL,
-        temperature DOUBLE PRECISION NOT NULL,
-        humidity DOUBLE PRECISION NOT NULL,
-        wind_speed DOUBLE PRECISION NOT NULL
-    )
-    ''')
+        cursor.execute(CREATE_WEATHER_TABLE)
+        conn.commit()
+        logging.info("Weather table created successfully.")
+    except Exception as e:
+        logging.error(f"Error creating weather table: {e}")
+    finally:
+        if conn:
+            conn.close()
 
-    conn.commit()
-    conn.close()
 
