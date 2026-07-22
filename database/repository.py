@@ -55,3 +55,33 @@ def insert_weather_data(record):
         if conn:
             conn.close()
 
+def get_latest_weather():
+    try:
+      conn = get_connection()
+      cursor = conn.cursor()
+  
+      cursor.execute("""
+          SELECT
+              c.city,
+              w.temperature,
+              w.humidity,
+              w.wind_speed,
+              w.observation_time
+          FROM weather w
+          JOIN city c
+              ON c.id = w.city_id
+          ORDER BY
+              w.observation_time DESC;
+      """)
+  
+      rows = cursor.fetchall()
+  
+      conn.close()
+  
+      return rows
+    except Exception as e:
+        logging.error(f"Error fetching city ID: {e}")
+        raise
+    finally:
+        if conn:
+            conn.close()

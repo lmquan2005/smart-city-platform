@@ -3,6 +3,7 @@ from database.queries import CREATE_CITY_TABLE, CREATE_WEATHER_TABLE
 from config.logger import logging
 
 def create_city_table():
+    conn = None
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -13,10 +14,11 @@ def create_city_table():
     except Exception as e:
         logging.error(f"Error creating city table: {e}")
     finally:
-        if conn:    
+        if conn is not None:    
             conn.close()
             
 def create_weather_table():
+    conn = None
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -27,7 +29,7 @@ def create_weather_table():
     except Exception as e:
         logging.error(f"Error creating weather table: {e}")
     finally:
-        if conn:
+        if conn is not None:
             conn.close()
 
 

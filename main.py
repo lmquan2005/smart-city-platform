@@ -1,5 +1,5 @@
 from numpy import record
-
+from src.cloud.s3 import upload_file
 from config.config import CITY_PATH
 from src.extract.weather_api import extract_weather
 from src.transform.weather_transform import transform_weather
@@ -40,6 +40,14 @@ def main():
         insert_weather_data(records)
 
         logging.info(f"Hoàn tất xử lý dữ liệu thời tiết cho thành phố: {city['city']}")
+    upload_file(
+        "data/raw/weather.csv",
+        "raw/weather.csv"
+    )
 
+    upload_file(
+        "logs/weather.log",
+        "logs/weather.log"
+    )
 if __name__ == "__main__":
     main() 

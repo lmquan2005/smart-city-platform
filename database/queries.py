@@ -30,3 +30,9 @@ INSERT INTO weather (city_id, observation_time, temperature, humidity, wind_spee
 GET_CITY_ID = """
 SELECT id FROM city WHERE city = %s
 """
+
+GET_LASTEST_DATA_WEATHER = """
+SELECT c.city, w.temperature, w.humidity, w.wind_speed, w. observation_time
+FROM city AS c INNER JOIN weather AS w ON c.id = w.city_id
+ORDER BY w.observation_time DESC
+"""
