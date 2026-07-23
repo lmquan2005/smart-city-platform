@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Smart City Dashboard{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="container-xl">
+                <a class="navbar-brand" href="/">
+                    <span class="brand-icon"><i class="bi bi-buildings"></i></span>
+                    <span class="brand-text">
+                        <span class="brand-title">Smart City</span>
+                        <span class="brand-subtitle">Weather Platform</span>
+                    </span>
+                </a>
+                <div class="navbar-status">
+                    <i class="bi bi-broadcast"></i>
+                    Live Data
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="page-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container-xl">
+            <div class="footer-inner">
+                <span class="footer-brand">
+                    <i class="bi bi-cloud-sun"></i>
+                    Smart City Platform
+                </span>
+                <span class="footer-meta">Weather ETL Pipeline on AWS</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

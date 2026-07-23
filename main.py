@@ -1,4 +1,3 @@
-from numpy import record
 from src.cloud.s3 import upload_file
 from config.config import CITY_PATH
 from src.extract.weather_api import extract_weather
@@ -9,6 +8,7 @@ from config.logger import logging
 from src.load.city_loader import load_city
 from database.repository import insert_city_data, get_city_id, insert_weather_data
 
+
 def main():
     cities = load_city(CITY_PATH)
 
@@ -18,7 +18,7 @@ def main():
     for _, city in cities.iterrows():
         latitude = city["latitude"]
         longitude = city["longitude"]
-        
+
         logging.info(f"Bắt đầu xử lý dữ liệu thời tiết cho thành phố: {city['city']}")
 
         weather = extract_weather(latitude, longitude)
@@ -26,13 +26,20 @@ def main():
             logging.error(f"Không thể lấy dữ liệu thời tiết cho thành phố: {city['city']}. Bỏ qua.")
             continue
 
-        records = transform_weather(weather, city['city'])  
+        records = transform_weather(weather, city['city'])
+        if records is None:
+            logging.error(f"Không thể chuyển đổi dữ liệu thời tiết cho thành phố: {city['city']}. Bỏ qua.")
+            continue
 
         city_id = get_city_id(records["city"])
+        if city_id is None:
+            logging.error(f"Không tìm thấy city_id cho thành phố: {city['city']}. Bỏ qua.")
+            continue
+
         records["city_id"] = city_id
 
-        df = pd.DataFrame([records]) if records else pd.DataFrame()
-        if df is None or df.empty:
+        df = pd.DataFrame([records])
+        if df.empty:
             logging.error(f"Không thể chuyển đổi dữ liệu thời tiết cho thành phố: {city['city']}. Bỏ qua.")
             continue
 
@@ -40,14 +47,17 @@ def main():
         insert_weather_data(records)
 
         logging.info(f"Hoàn tất xử lý dữ liệu thời tiết cho thành phố: {city['city']}")
+
     upload_file(
         "data/raw/weather.csv",
-        "raw/weather.csv"
+        "raw/weather.csv",
     )
 
     upload_file(
         "logs/weather.log",
-        "logs/weather.log"
+        "logs/weather.log",
     )
+
+
 if __name__ == "__main__":
-    main() 
+    main()
