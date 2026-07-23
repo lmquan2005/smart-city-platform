@@ -2,6 +2,20 @@ from database.connection import get_connection
 from database.queries import CREATE_CITY_TABLE, CREATE_WEATHER_TABLE
 from config.logger import logging
 
+def create_database():
+    conn = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(CREATE_DATABASE)
+        conn.commit()
+        logging.info("Database created successfully.")
+    except Exception as e:
+        logging.error(f"Error creating database: {e}")
+    finally:
+        if conn is not None:
+            conn.close()
+
 def create_city_table():
     conn = None
     try:
